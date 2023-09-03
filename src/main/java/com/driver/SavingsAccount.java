@@ -1,52 +1,37 @@
 package com.driver;
 
-public class SavingsAccount extends BankAccount{
-    double rate;
-    double maxWithdrawalLimit;
+public class SavingsAccount extends BankAccount {
+    private double rate;
+    private double maxWithdrawalLimit;
 
-    public SavingsAccount(String name, double balance, double maxWithdrawalLimit, double rate) throws Exception {
-        // minimum balance is 0 by default
-        super(name,balance,0);
-        if(balance<0){
-            throw new Exception("Insufficient Balance");
-        }
-        this.maxWithdrawalLimit=maxWithdrawalLimit;
-        this.rate=rate;
+    public SavingsAccount(String name, double balance, double maxWithdrawalLimit, double rate) {
+        super(name, balance, 0); // minimum balance is 0 by default
+        this.maxWithdrawalLimit = maxWithdrawalLimit;
+        this.rate = rate;
     }
+
+    @Override
     public void withdraw(double amount) throws Exception {
-        // Might throw the following errors:
-        // 1. "Maximum Withdraw Limit Exceed" : If the amount exceeds maximum withdrawal limit
-        // 2. "Insufficient Balance" : If the amount exceeds balance
-        if(amount>this.maxWithdrawalLimit){
-            throw new Exception("Maximum Withdraw Limit Exceed");
+        if (amount > maxWithdrawalLimit) {
+            throw new Exception("Maximum Withdraw Limit Exceeded");
         }
         super.withdraw(amount);
     }
 
-    public double getRate() {
-        return rate;
+    public double getSimpleInterest(int years) {
+        return getBalance() * (1 + rate * years);
     }
 
-    public void setRate(double rate) {
-        this.rate = rate;
+    public double getCompoundInterest(int times, int years) {
+        return getBalance() * Math.pow(1 + rate / times, times * years);
+    }
+
+    // Getter methods
+    public double getRate() {
+        return rate;
     }
 
     public double getMaxWithdrawalLimit() {
         return maxWithdrawalLimit;
     }
-
-    public void setMaxWithdrawalLimit(double maxWithdrawalLimit) {
-        this.maxWithdrawalLimit = maxWithdrawalLimit;
-    }
-
-    public double getSimpleInterest(int years){
-        // Return the final amount considering that bank gives simple interest on current amount
-        return getBalance() * (1 + rate * years);
-    }
-
-    public double getCompoundInterest(int times, int years){
-        // Return the final amount considering that bank gives compound interest on current amount given times per year
-        return getBalance() * Math.pow(1 + rate / times, times * years);
-    }
-
 }

@@ -6,76 +6,60 @@ public class BankAccount {
     private double balance;
     private double minBalance;
 
-    public String getName() {
-        return name;
+    public BankAccount(String name, double balance, double minBalance) {
+        this.name = name;
+        this.balance = balance;
+        this.minBalance = minBalance;
     }
 
+    public String generateAccountNumber(int digits, int sum) throws Exception {
+        if (digits <= 0 || sum < 0 || sum > 9 * digits) {
+            throw new Exception("Account Number cannot be generated");
+        }
 
-    public void setName(String name) {
-        this.name = name;
+        StringBuilder accountNumber = new StringBuilder();
+        int remainingSum = sum;
+
+        for (int i = 0; i < digits - 1; i++) {
+            int digit = Math.min(remainingSum, 9);
+            accountNumber.append(digit);
+            remainingSum -= digit;
+        }
+
+        if (remainingSum > 9) {
+            throw new Exception("Account Number cannot be generated");
+        }
+
+        accountNumber.append(remainingSum);
+        return accountNumber.toString();
+    }
+
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+        }
+    }
+
+    public void withdraw(double amount) throws Exception {
+        if (balance - amount < minBalance) {
+            throw new Exception("Insufficient Balance");
+        }
+
+        if (amount > 0) {
+            balance -= amount;
+        }
+    }
+
+    // Getter methods
+    public String getName() {
+        return name;
     }
 
     public double getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
-
     public double getMinBalance() {
         return minBalance;
     }
-
-    public void setMinBalance(double minBalance) {
-        this.minBalance = minBalance;
-    }
-
-    public BankAccount(String name, double balance, double minBalance) {
-        this.name=name;
-        this.balance=balance;
-        this.minBalance=minBalance;
-    }
-
-    public String generateAccountNumber(int digits, int sum) throws Exception{
-        //Each digit of an account number can lie between 0 and 9 (both inclusive)
-        //Generate account number having given number of 'digits' such that the sum of digits is equal to 'sum'
-        //If it is not possible, throw "Account Number can not be generated" exception
-        if(digits<=0||sum<0||sum>9*digits){
-            throw new Exception("Account Number can not be generated");
-        }
-
-        StringBuilder accountNumber=new StringBuilder();
-        int remaningSum=sum;
-
-        for(int i=0;i<digits-1;i++){
-            int digit=Math.min(remaningSum,9);
-            accountNumber.append(digit);
-            remaningSum-=digit;
-        }
-
-        if(remaningSum>9){
-            throw new Exception("Account Number can not be generated");
-        }
-        accountNumber.append(remaningSum);
-        return accountNumber.toString();
-    }
-
-    public void deposit(double amount) {
-        //add amount to balance
-        if(this.balance>0){
-            this.balance+=amount;
-        }
-    }
-
-    public void withdraw(double amount) throws Exception {
-        // Remember to throw "Insufficient Balance" exception, if the remaining amount would be less than minimum balance
-        if(this.balance-amount<minBalance){
-            throw new Exception("Insufficient Balance");
-        }
-        if(balance>0){
-            balance-=amount;
-        }
-    }
-
 }
